@@ -1,28 +1,47 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ionic'])
 
-.controller('DashCtrl', function($scope) {})
+  .controller('ProfileController', ['$scope', '$stateParams', 'profileService',
+    function($scope, $stateParams, profileService) {
+      var id = $stateParams.id;
+      $scope.userProfile = profileService.getProfile(id);
+    }
+  ])
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+  .controller('AddsController', ['$scope', '$ionicModal', 'profileService', 
+    function($scope, $ionicModal, profileService) {
+      $ionicModal.fromTemplateUrl('my-modal.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+      }).then(function(modal) {
+        $scope.modal = modal;
+      });
+      $scope.openModal = function() {
+        $scope.modal.show();
+      };
+      $scope.closeModal = function() {
+        $scope.modal.hide();
+      };
+  }])
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-})
+  .controller('ProfilesController', ['$scope', 'profileService', function($scope, profileService) {
+    $scope.users = profileService.getProfiles();
+  }])
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
+  .controller('AllAdsController', ['addsService', '$scope', '$ionicPopup', '$timeout',
+    function(addsService, $scope, $ionicPopup, $timeout){
+      $scope.propagandas = addsService.getPublicidades();
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-});
+      $scope.mostrarPropagandas = function(item){
+        for(i = 0; i < item.propagandas.length; i++){
+          $scope.showAlert(item.propagandas[i].Titulo, item.propagandas[i].Descripcion);
+        }
+      };
+
+      $scope.showAlert = function(titulo, descripcion) {
+        var alertPopup = $ionicPopup.alert({
+          title: titulo,
+          template: descripcion
+        });
+      };
+    }
+  ]);

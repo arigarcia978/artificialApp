@@ -1,0 +1,11 @@
+<ion-view view-title="Profiles">
+    <ion-content class="padding">
+        <div class="list">
+		    <a class="item item-avatar" ng-repeat = 'user in users' ng-href="#/tabs/profile/{{user.id}}">
+		      <img src="img/mike.png">
+		      <h2>user.nombre</h2>
+		      <p>user.cumpleaños</p>
+		    </a>
+		</div>
+    </ion-content>
+</ion-view>
